@@ -15,7 +15,7 @@
  */
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '1.9'
+    gradleVersion = '1.11'
 }
 
 buildscript {
@@ -39,7 +39,6 @@ buildscript {
 
 apply plugin: 'catkin'
 
-
 allprojects {
     /*
       A github url provides a good standard unique name for your project
@@ -54,6 +53,7 @@ subprojects {
       See https://github.com/rosjava/rosjava_bootstrap (look for gradle_plugins)
       to see what is going on under the hood.
     */
+    apply plugin: 'eclipse'
     apply plugin: 'ros-java'
 }
 
@@ -69,4 +69,4 @@ subprojects {
   If you're using catkin_make, this is not important, since it will use the task list specified
   in CMakeLists.txt
 */
-defaultTasks 'tasks'
+defaultTasks 'publishMavenJavaPublicationToMavenRepository'

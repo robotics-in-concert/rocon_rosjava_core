@@ -16,3 +16,7 @@
 
 include 'rocon_uri'
 include 'rocon_app_manager'
+include 'rocon_uri'
+include 'rocon_app_manager'
+include 'rocon_uri'
+include 'rocon_app_manager'
