@@ -17,4 +17,3 @@
 dependencies {
   compile 'org.ros.rosjava_core:rosjava:[0.1,)'
 }
-
