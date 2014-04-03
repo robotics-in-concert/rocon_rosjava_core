@@ -10,7 +10,7 @@ import java.security.InvalidParameterException;
 ** Classes
 *****************************************************************************/
 
-class ByteArrays {
+public class ByteArrays {
 
 	// Hex help
 	private static final byte[] HEX_CHAR_TABLE = { (byte) '0', (byte) '1',

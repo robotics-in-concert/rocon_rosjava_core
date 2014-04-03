@@ -44,7 +44,7 @@ allprojects {
       A github url provides a good standard unique name for your project
       Example below, but you may wish to switch to your own unique url.
     */
-    group 'com.github.rosjava.rocon_rosjava_utils'
+    group 'com.github.rocon_rosjava_core'
     version = project.catkin.pkg.version
 }
 
@@ -69,4 +69,4 @@ subprojects {
   If you're using catkin_make, this is not important, since it will use the task list specified
   in CMakeLists.txt
 */
-defaultTasks 'publishMavenJavaPublicationToMavenRepository'
+defaultTasks 'installApp', 'publishMavenJavaPublicationToMavenRepository'

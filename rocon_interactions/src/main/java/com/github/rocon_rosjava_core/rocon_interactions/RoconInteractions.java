@@ -65,7 +65,7 @@ public class RoconInteractions extends AbstractNodeMain {
 		} catch(Exception e) {
 			System.out.println("Interactions: unknown error");
     	}
-    }    	
+    }
 }
 
 
