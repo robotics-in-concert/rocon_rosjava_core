@@ -16,26 +16,25 @@ import org.ros.node.topic.Subscriber;
 ** Classes
 *****************************************************************************/
 
-public class SubscriberProxy<MsgType> {
+public class ListenerNode<MsgType> {
 	private MsgType msg;
 	private Subscriber<MsgType> subscriber;
 	private MessageListener<MsgType> listener;
 	final Log log;
 	String errorMessage;
 	
-	public SubscriberProxy(ConnectedNode connectedNode, String topicName, String topicType) {
-		// DJS: Can we extract topic type from the MsgType class?
+	public ListenerNode(ConnectedNode connectedNode, String topicName, String topicType) {
 		this.log = connectedNode.getLog();
-		// don't start listening till we actually call
-		this.listener = null;
 		this.msg = null;
+		this.errorMessage = "";
 		NameResolver resolver = NodeNameResolver.newRoot();
         // NameResolver resolver = connectedNode.getResolver().newChild("concert");
         String resolvedTopicName = resolver.resolve(topicName).toString();
 		this.subscriber = connectedNode.newSubscriber(
 				resolvedTopicName,
-				topicType
+				topicType  // DJS: Can we extract topic type from the MsgType class?
 				);
+		this.setupListener();
 	}
 	
 	/**
@@ -47,12 +46,7 @@ public class SubscriberProxy<MsgType> {
 	 * @return
 	 * @throws RosRuntimeException
 	 */
-	public MsgType call() throws RosRuntimeException {
-		this.msg = null;
-		this.errorMessage = "";
-		if (this.listener == null) {
-			this.addListener();
-		}
+	public void waitForResponse() throws RosRuntimeException {
         int count = 0;
         while ( this.msg == null ) {
             if ( this.errorMessage != "" ) {  // errorMessage gets set by an exception in the run method
@@ -70,10 +64,15 @@ public class SubscriberProxy<MsgType> {
             }
             count = count + 1;
         }
-		return this.msg;
 	}
 	
-	private void addListener() {
+	public void waitForNextResponse() {
+		this.errorMessage = "";
+		this.msg = null;
+		this.waitForResponse();
+	}
+	
+	private void setupListener() {
 		// @todo : check if listener is not null and handle appropriately
         this.listener = new MessageListener<MsgType>() {
             @Override

@@ -1,22 +1,22 @@
-package com.github.rocon_rosjava_core.master_info;
+package com.github.rocon_rosjava_core.rocon_interactions;
 
 /*****************************************************************************
 ** Imports
 *****************************************************************************/
 
 import org.apache.commons.logging.Log;
+import org.ros.exception.RosRuntimeException;
 import org.ros.namespace.GraphName;
 import org.ros.node.AbstractNodeMain;
 import org.ros.node.ConnectedNode;
-import org.ros.exception.RosRuntimeException;
 
 import com.github.rocon_rosjava_core.rosjava_utils.ListenerNode;
 
 /*****************************************************************************
-** MasterInfo
+** RoconInteractions
 *****************************************************************************/
 
-public class MasterInfo extends AbstractNodeMain {
+public class RoconInteractions extends AbstractNodeMain {
 
 	private rocon_std_msgs.MasterInfo msg;
 
@@ -30,12 +30,11 @@ public class MasterInfo extends AbstractNodeMain {
         final Log log = connectedNode.getLog();
     	ListenerNode<rocon_std_msgs.MasterInfo> masterInfo = new ListenerNode<rocon_std_msgs.MasterInfo>(connectedNode, "/concert/info", "rocon_std_msgs/MasterInfo");
     	try {
-    		masterInfo.waitForResponse();
-        	this.msg = masterInfo.getMessage();
-        	log.info("Master Info : retrieved successfully [" + this.msg.getName() + "]");
+    		this.msg = masterInfo.call();
     	} catch (RosRuntimeException e) {
     		log.error("Master Info : " + e.getMessage());
     	}
+    	log.info("Master Info : retrieved successfully [" + this.msg.getName() + "]");
     }
 
     /****************************************
