@@ -7,6 +7,8 @@ package com.github.rocon_rosjava_core.rosjava_utils;
 import org.apache.commons.logging.Log;
 import org.ros.exception.RosRuntimeException;
 import org.ros.message.MessageListener;
+import org.ros.namespace.NameResolver;
+import org.ros.namespace.NodeNameResolver;
 import org.ros.node.ConnectedNode;
 import org.ros.node.topic.Subscriber;
 
@@ -24,10 +26,16 @@ public class SubscriberProxy<MsgType> {
 	public SubscriberProxy(ConnectedNode connectedNode, String topicName, String topicType) {
 		// DJS: Can we extract topic type from the MsgType class?
 		this.log = connectedNode.getLog();
-		this.subscriber = connectedNode.newSubscriber(topicName, topicType);
 		// don't start listening till we actually call
 		this.listener = null;
 		this.msg = null;
+		NameResolver resolver = NodeNameResolver.newRoot();
+        // NameResolver resolver = connectedNode.getResolver().newChild("concert");
+        String resolvedTopicName = resolver.resolve(topicName).toString();
+		this.subscriber = connectedNode.newSubscriber(
+				resolvedTopicName,
+				topicType
+				);
 	}
 	
 	/**
