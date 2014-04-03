@@ -19,3 +19,5 @@ include 'rocon_uri'
 include 'rocon_app_manager'
 */
 include 'master_info'
+include 'rocon_gateways'
+include 'rosjava_utils'
