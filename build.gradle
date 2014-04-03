@@ -44,7 +44,7 @@ allprojects {
       A github url provides a good standard unique name for your project
       Example below, but you may wish to switch to your own unique url.
     */
-    group 'com.github.rocon_rosjava_core'
+    group 'com.github.robotics_in_concert.rocon_rosjava_core'
     version = project.catkin.pkg.version
 }
 

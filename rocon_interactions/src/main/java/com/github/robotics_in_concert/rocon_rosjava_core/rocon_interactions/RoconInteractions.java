@@ -1,4 +1,4 @@
-package com.github.rocon_rosjava_core.rocon_interactions;
+package com.github.robotics_in_concert.rocon_rosjava_core.rocon_interactions;
 
 /*****************************************************************************
 ** Imports
@@ -10,8 +10,8 @@ import org.ros.namespace.GraphName;
 import org.ros.node.AbstractNodeMain;
 import org.ros.node.ConnectedNode;
 
-import com.github.rocon_rosjava_core.rosjava_utils.ListenerNode;
-import com.github.rocon_rosjava_core.rosjava_utils.RosTopicInfo;
+import com.github.robotics_in_concert.rocon_rosjava_core.rosjava_utils.ListenerNode;
+import com.github.robotics_in_concert.rocon_rosjava_core.rosjava_utils.RosTopicInfo;
 
 /*****************************************************************************
 ** RoconInteractions

@@ -22,4 +22,4 @@ dependencies {
 }
 
 apply plugin:'application'
-mainClassName = 'com.github.rocon_rosjava_core.rocon_interactions.RoconInteractions'
+mainClassName = 'com.github.robotics_in_concert.rocon_rosjava_core.rocon_interactions.RoconInteractions'

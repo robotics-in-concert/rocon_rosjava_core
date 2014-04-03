@@ -1,4 +1,4 @@
-package com.github.rocon_rosjava_core.rosjava_utils;
+package com.github.robotics_in_concert.rocon_rosjava_core.rosjava_utils;
 
 /*****************************************************************************
 ** Imports

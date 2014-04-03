@@ -21,4 +21,6 @@ dependencies {
 }
 
 apply plugin:'application'
-mainClassName = 'com.github.rocon_rosjava_core.master_info.MasterInfo'
+mainClassName = 'com.github.robotics_in_concert.rocon_rosjava_core.master_info.MasterInfo'
+
+defaultTasks 'installApp', 'publishMavenJavaPublicationToMavenRepository'
