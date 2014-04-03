@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 Daniel Stonier
+ * Copyright (C) 2014 Daniel Stonier.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -14,8 +14,12 @@
  * the License.
  */
 
-/*
-include 'rocon_uri'
-include 'rocon_app_manager'
-*/
-include 'master_info'
+dependencies {
+  compile 'org.ros.rosjava_core:rosjava:[0.1,)'
+  compile 'org.ros.rosjava_messages:rocon_std_msgs:[0.7,)'
+  /* Example of a local subproject dependency */ 
+  /* compile project(':sibling_gradle_project') */
+}
+
+apply plugin:'application'
+mainClassName = 'com.github.rocon_rosjava_core.master_info.MasterInfo'

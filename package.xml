@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package>
-  <name>rocon_rosjava_utils</name>
+  <name>rocon_rosjava_core</name>
   <version>0.1.0</version>
   <description>
     Rocon related libraries in rosjava.
