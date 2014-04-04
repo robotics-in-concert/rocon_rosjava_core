@@ -63,9 +63,9 @@ public class MasterInfo extends AbstractNodeMain {
     	return this.msg.getIcon().getFormat();
     }
     
-//    public Icon getIcon() {
-//    	// dunno yet
-//    }
+    public rocon_std_msgs.Icon getIcon() {
+    	return this.msg.getIcon();
+    }
 
     /****************************************
     ** Main

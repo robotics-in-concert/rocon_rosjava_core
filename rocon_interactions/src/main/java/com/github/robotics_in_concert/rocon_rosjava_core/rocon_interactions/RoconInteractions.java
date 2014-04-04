@@ -13,6 +13,8 @@ import org.ros.node.ConnectedNode;
 import com.github.robotics_in_concert.rocon_rosjava_core.rosjava_utils.ListenerNode;
 import com.github.robotics_in_concert.rocon_rosjava_core.rosjava_utils.RosTopicInfo;
 
+import rocon_interaction_msgs.Roles;
+
 /*****************************************************************************
 ** RoconInteractions
 *****************************************************************************/
@@ -20,7 +22,9 @@ import com.github.robotics_in_concert.rocon_rosjava_core.rosjava_utils.RosTopicI
 public class RoconInteractions extends AbstractNodeMain {
 
 	private GraphName namespace;
+	private GraphName rolesTopicName;
 	private Log log;
+	private Roles roles;
 	
     /**
      * Go get the RoconInteractionsrmation.
@@ -35,13 +39,20 @@ public class RoconInteractions extends AbstractNodeMain {
         try {
         	topicName = topicInformation.findTopic("rocon_interaction_msgs/Roles");
         } catch(RosRuntimeException e) {
-        	log.error("Interactions : timed out looking for the RoconInteractionsrmation topic [" + "]");
+        	log.error("Interactions : timed out looking for the rocon interactions roles topic [" + "]");
+        	return;
         }
-        this.namespace = GraphName.of(topicName).getParent();
+        this.rolesTopicName = GraphName.of(topicName);
+        this.namespace = this.rolesTopicName.getParent();
         log.info("Interactions : namespace [" + this.namespace.toString() + "]");
-
+    	ListenerNode<Roles> rolesListener = 
+    			new ListenerNode<Roles>(
+    					connectedNode,
+    					this.rolesTopicName.toString(),
+    					Roles._TYPE);
+    	rolesListener.waitForResponse();
+    	this.roles = rolesListener.getMessage();
     }
-
 
     /****************************************
     ** Getters
@@ -50,6 +61,10 @@ public class RoconInteractions extends AbstractNodeMain {
     @Override
     public GraphName getDefaultNodeName() {
 		return GraphName.of("rocon_rosjava_interactions");
+    }
+    
+    public rocon_interaction_msgs.Roles getRoles() {
+    	return this.roles;
     }
     
     /****************************************
