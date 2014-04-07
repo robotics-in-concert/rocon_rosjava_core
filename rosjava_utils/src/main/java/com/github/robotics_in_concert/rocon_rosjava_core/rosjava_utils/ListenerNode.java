@@ -4,7 +4,8 @@ package com.github.robotics_in_concert.rocon_rosjava_core.rosjava_utils;
 ** Imports
 *****************************************************************************/
 
-import org.apache.commons.logging.Log;
+import java.util.concurrent.TimeoutException;
+
 import org.ros.exception.RosRuntimeException;
 import org.ros.message.MessageListener;
 import org.ros.namespace.NameResolver;
@@ -20,15 +21,18 @@ public class ListenerNode<MsgType> {
 	private MsgType msg;
 	private Subscriber<MsgType> subscriber;
 	private MessageListener<MsgType> listener;
-	final Log log;
+	// final Log log;
 	String errorMessage;
 	
-	public ListenerNode(ConnectedNode connectedNode, String topicName, String topicType) {
-		this.log = connectedNode.getLog();
+	public ListenerNode() {
+		this.msg = null;
+		this.errorMessage = "";
+	}
+
+	public void connect(ConnectedNode connectedNode, String topicName, String topicType) {
 		this.msg = null;
 		this.errorMessage = "";
 		NameResolver resolver = NodeNameResolver.newRoot();
-        // NameResolver resolver = connectedNode.getResolver().newChild("concert");
         String resolvedTopicName = resolver.resolve(topicName).toString();
 		this.subscriber = connectedNode.newSubscriber(
 				resolvedTopicName,
@@ -43,33 +47,41 @@ public class ListenerNode<MsgType> {
 	 * 
 	 * @todo : an option for getting the last message caught if available
 	 * @todo : a timeout argument
+	 * 
 	 * @return
-	 * @throws RosRuntimeException
+	 * @throws java.util.concurrent.TimeoutException
+	 * @throws com.github.robotics_in_concert.rocon_rosjava_core.rosjava_utils.ListenerException
 	 */
-	public void waitForResponse() throws RosRuntimeException {
+	public void waitForResponse() throws ListenerException, TimeoutException {
         int count = 0;
         while ( this.msg == null ) {
             if ( this.errorMessage != "" ) {  // errorMessage gets set by an exception in the run method
-                throw new RosRuntimeException(this.errorMessage);
+                throw new ListenerException(this.errorMessage);
             }
             try {
                 Thread.sleep(200);
             } catch (Exception e) {
-                throw new RosRuntimeException(e);
+                throw new ListenerException(e);
             }
             // timeout.
             if ( count == 20 ) {
                 this.errorMessage = "timed out waiting for a " + subscriber.getTopicName() + "publication";
-                throw new RosRuntimeException(this.errorMessage);
+                throw new TimeoutException(this.errorMessage);
             }
             count = count + 1;
         }
 	}
 	
-	public void waitForNextResponse() {
+	public void waitForNextResponse() throws ListenerException, TimeoutException {
 		this.errorMessage = "";
 		this.msg = null;
-		this.waitForResponse();
+		try {
+			this.waitForResponse();
+		} catch (ListenerException e) {
+			throw e;
+		} catch (TimeoutException e) {
+			throw e;
+		}
 	}
 	
 	private void setupListener() {
