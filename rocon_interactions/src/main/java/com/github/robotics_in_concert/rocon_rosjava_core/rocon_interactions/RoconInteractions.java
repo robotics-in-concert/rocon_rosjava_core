@@ -4,18 +4,22 @@ package com.github.robotics_in_concert.rocon_rosjava_core.rocon_interactions;
 ** Imports
 *****************************************************************************/
 
+import com.github.robotics_in_concert.rocon_rosjava_core.rosjava_utils.BlockingServiceClientNode;
+import com.github.robotics_in_concert.rocon_rosjava_core.rosjava_utils.BlockingServiceClientException;
 import com.github.robotics_in_concert.rocon_rosjava_core.rosjava_utils.ListenerException;
 import com.github.robotics_in_concert.rocon_rosjava_core.rosjava_utils.ListenerNode;
 import com.github.robotics_in_concert.rocon_rosjava_core.rosjava_utils.RosTopicInfo;
 import com.google.common.collect.Lists;
 
 import java.util.concurrent.TimeoutException;
+import java.util.List;
 
 // import org.apache.commons.logging.Log;
 // final log = connectedNode.getLog();
 // log.error("Dude does this work on android?")
 
 import org.ros.exception.RosRuntimeException;
+import org.ros.exception.ServiceNotFoundException;
 import org.ros.internal.loader.CommandLineLoader;
 import org.ros.namespace.GraphName;
 import org.ros.node.AbstractNodeMain;
@@ -24,7 +28,10 @@ import org.ros.node.DefaultNodeMainExecutor;
 import org.ros.node.NodeConfiguration;
 import org.ros.node.NodeMainExecutor;
 
-import rocon_interaction_msgs.Roles;
+import rocon_std_msgs.Strings;
+import rocon_interaction_msgs.GetRoles;
+import rocon_interaction_msgs.GetRolesRequest;
+import rocon_interaction_msgs.GetRolesResponse;
 
 /*****************************************************************************
 ** RoconInteractions
@@ -33,11 +40,12 @@ import rocon_interaction_msgs.Roles;
 public class RoconInteractions extends AbstractNodeMain {
 
 	private GraphName namespace;
-	private GraphName rolesTopicName;
-	private ListenerNode<Roles> rolesListener;
+	private BlockingServiceClientNode<GetRolesRequest, GetRolesResponse> getRolesClient;
+	private String roconURI;
 	
-	public RoconInteractions() {
-		this.rolesListener = new ListenerNode<Roles>();
+	public RoconInteractions(String roconURI) {
+		this.getRolesClient = new BlockingServiceClientNode<GetRolesRequest, GetRolesResponse>();
+		this.roconURI = roconURI;
 	}
     /**
      * Go get the RoconInteractionsrmation.
@@ -49,19 +57,22 @@ public class RoconInteractions extends AbstractNodeMain {
         String topicName = "";
         RosTopicInfo topicInformation = new RosTopicInfo(connectedNode);
         try {
-        	topicName = topicInformation.findTopic("rocon_interaction_msgs/Roles");
+        	topicName = topicInformation.findTopic("rocon_interaction_msgs/InteractiveClients");
         } catch(RosRuntimeException e) {
-        	// should be having some sort of error flag here that can be picked up in
-        	// the waitForResponse loops.
+    		// should be having some sort of error flag that can be picked up in waitForResponse
         	return;
         }
-        this.rolesTopicName = GraphName.of(topicName);
-        this.namespace = this.rolesTopicName.getParent();
+        this.namespace = GraphName.of(topicName).getParent();
         //System.out.println("Interactions : namespace [" + this.namespace.toString() + "]");
-    	this.rolesListener.connect(
-    					connectedNode,
-    					this.rolesTopicName.toString(),
-    					Roles._TYPE);
+    	try {
+	    	this.getRolesClient.call(
+	    					connectedNode,
+	    					this.namespace.toString() + "/get_roles",
+	    					GetRoles._TYPE);
+    	} catch (ServiceNotFoundException e) {
+    		// should be having some sort of error flag that can be picked up in waitForResponse
+        	return;
+    	}
     }
 
     /**
@@ -73,10 +84,10 @@ public class RoconInteractions extends AbstractNodeMain {
      */
     public void waitForResponse() throws InteractionsException {
     	try {
-    		rolesListener.waitForResponse();
-	    } catch(ListenerException e) {
-	    	throw new InteractionsException(e.getMessage());
+    		getRolesClient.waitForResponse();
 	    } catch(TimeoutException e) {
+	    	throw new InteractionsException(e.getMessage());
+	    } catch(BlockingServiceClientException e) {
 	    	throw new InteractionsException(e.getMessage());
 	    }
     }
@@ -98,19 +109,11 @@ public class RoconInteractions extends AbstractNodeMain {
      * @throws InteractionsException : if listener error, timeout or general runtime problem
      * @see ListenerNode
      */
-    public rocon_interaction_msgs.Roles getRoles() throws InteractionsException {
+    public List<String> getRoles() throws InteractionsException {
     	// could use better logic in here
     	// e.g. if onStart hasn't been called yet, throw some type of exception
-    	try {
-	    	if (rolesListener.getMessage() == null) {
-	    		rolesListener.waitForResponse();
-	    	}
-	    } catch(ListenerException e) {
-	    	throw new InteractionsException(e.getMessage());
-	    } catch(TimeoutException e) {
-	    	throw new InteractionsException(e.getMessage());
-	    }
-    	return rolesListener.getMessage();
+    	this.waitForResponse();
+    	return getRolesClient.getResponse().getRoles();
     }
     
     public String getNamespace() {
@@ -127,13 +130,18 @@ public class RoconInteractions extends AbstractNodeMain {
     	String[] args = { "com.github.rocon_rosjava_core.rocon_interactions.RoconInteractions" };
     	CommandLineLoader loader = new CommandLineLoader(Lists.newArrayList(args));
     	NodeConfiguration nodeConfiguration = loader.build();
-    	RoconInteractions interactions = new RoconInteractions();
+    	// This is an example rocon uri used by a remocon.
+    	String roconURI = "rocon:/"
+                + Strings.URI_WILDCARD + "/" + Strings.URI_WILDCARD + "/"
+                + Strings.APPLICATION_FRAMEWORK_HYDRO + "|" + Strings.APPLICATION_FRAMEWORK_INDIGO + "/"
+                + Strings.OS_ICE_CREAM_SANDWICH + "|" + Strings.OS_JELLYBEAN;
+    	RoconInteractions interactions = new RoconInteractions(roconURI);
     	
         NodeMainExecutor nodeMainExecutor = DefaultNodeMainExecutor.newDefault();
         nodeMainExecutor.execute(interactions, nodeConfiguration);
         try {
-        	Roles roles = interactions.getRoles();
-	        for (String role : roles.getList()) {
+        	List<String> roles = interactions.getRoles();
+	        for (String role : roles) {
 	        	System.out.println("Interactions : found role '" + role + "'");
 	        }
 	    } catch(InteractionsException e) {
