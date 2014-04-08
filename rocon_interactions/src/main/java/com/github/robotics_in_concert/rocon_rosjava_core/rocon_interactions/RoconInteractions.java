@@ -18,9 +18,11 @@ import java.util.List;
 // final log = connectedNode.getLog();
 // log.error("Dude does this work on android?")
 
+
 import org.ros.exception.RosRuntimeException;
 import org.ros.exception.ServiceNotFoundException;
 import org.ros.internal.loader.CommandLineLoader;
+import org.ros.message.MessageFactory;
 import org.ros.namespace.GraphName;
 import org.ros.node.AbstractNodeMain;
 import org.ros.node.ConnectedNode;
@@ -42,10 +44,13 @@ public class RoconInteractions extends AbstractNodeMain {
 	private GraphName namespace;
 	private BlockingServiceClientNode<GetRolesRequest, GetRolesResponse> getRolesClient;
 	private String roconURI;
+	private MessageFactory messageFactory;
 	
 	public RoconInteractions(String roconURI) {
-		this.getRolesClient = new BlockingServiceClientNode<GetRolesRequest, GetRolesResponse>();
+		this.getRolesClient = null;
 		this.roconURI = roconURI;
+		NodeConfiguration nodeConfiguration = NodeConfiguration.newPrivate();
+		this.messageFactory = nodeConfiguration.getTopicMessageFactory();
 	}
     /**
      * Go get the RoconInteractionsrmation.
@@ -65,10 +70,18 @@ public class RoconInteractions extends AbstractNodeMain {
         this.namespace = GraphName.of(topicName).getParent();
         //System.out.println("Interactions : namespace [" + this.namespace.toString() + "]");
     	try {
-	    	this.getRolesClient.call(
-	    					connectedNode,
-	    					this.namespace.toString() + "/get_roles",
-	    					GetRoles._TYPE);
+    		GetRolesRequest request = this.messageFactory.newFromType(GetRolesRequest._TYPE);
+    		request.setUri(this.roconURI);
+    		synchronized(this) {
+	    		this.getRolesClient = new BlockingServiceClientNode<GetRolesRequest, GetRolesResponse>(
+						connectedNode,
+						this.namespace.toString() + "/get_roles",
+						GetRoles._TYPE,
+						request
+				);
+	    		this.getRolesClient.waitForResponse();
+    			notifyAll();
+    		}
     	} catch (ServiceNotFoundException e) {
     		// should be having some sort of error flag that can be picked up in waitForResponse
         	return;
@@ -83,13 +96,15 @@ public class RoconInteractions extends AbstractNodeMain {
      * @throws InteractionsException : if listener error, timeout or general runtime problem
      */
     public void waitForResponse() throws InteractionsException {
-    	try {
-    		getRolesClient.waitForResponse();
-	    } catch(TimeoutException e) {
-	    	throw new InteractionsException(e.getMessage());
-	    } catch(BlockingServiceClientException e) {
-	    	throw new InteractionsException(e.getMessage());
-	    }
+    	synchronized(this) {
+    		try {
+    			if (getRolesClient == null) {
+    				this.wait(4000);
+    			}
+	    	} catch(InterruptedException e) {
+	    		e.printStackTrace();
+	    	}
+    	}
     }
 
     /****************************************
