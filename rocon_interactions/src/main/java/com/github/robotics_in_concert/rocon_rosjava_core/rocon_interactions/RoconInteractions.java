@@ -44,13 +44,10 @@ public class RoconInteractions extends AbstractNodeMain {
 	private GraphName namespace;
 	private BlockingServiceClientNode<GetRolesRequest, GetRolesResponse> getRolesClient;
 	private String roconURI;
-	private MessageFactory messageFactory;
 	
 	public RoconInteractions(String roconURI) {
 		this.getRolesClient = null;
 		this.roconURI = roconURI;
-		NodeConfiguration nodeConfiguration = NodeConfiguration.newPrivate();
-		this.messageFactory = nodeConfiguration.getTopicMessageFactory();
 	}
     /**
      * Go get the RoconInteractionsrmation.
@@ -69,8 +66,9 @@ public class RoconInteractions extends AbstractNodeMain {
         }
         this.namespace = GraphName.of(topicName).getParent();
         //System.out.println("Interactions : namespace [" + this.namespace.toString() + "]");
-    	try {
-    		GetRolesRequest request = this.messageFactory.newFromType(GetRolesRequest._TYPE);
+        MessageFactory messageFactory = connectedNode.getServiceRequestMessageFactory();
+		try {
+    		GetRolesRequest request = messageFactory.newFromType(GetRoles._TYPE);
     		request.setUri(this.roconURI);
     		synchronized(this) {
 	    		this.getRolesClient = new BlockingServiceClientNode<GetRolesRequest, GetRolesResponse>(

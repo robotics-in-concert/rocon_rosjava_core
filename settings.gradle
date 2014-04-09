@@ -14,11 +14,6 @@
  * the License.
  */
 
-/*
-include 'rocon_uri'
-include 'rocon_app_manager'
-include 'rocon_gateways'
-*/
 include 'master_info'
 include 'rosjava_utils'
 include 'rocon_interactions'
