@@ -1,5 +1,3 @@
-Why are you reading thisi? - I said not to!
-
 == Installation From Hydro Sources on Trusty ==
 
 This is only temporary until rosjava upgrades to indigo...but hydro sources work fine.
