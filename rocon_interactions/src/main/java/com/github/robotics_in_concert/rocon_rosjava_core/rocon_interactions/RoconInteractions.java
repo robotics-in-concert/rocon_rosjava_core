@@ -147,7 +147,7 @@ public class RoconInteractions extends AbstractNodeMain {
     	String roconURI = "rocon:/"
                 + Strings.URI_WILDCARD + "/" + Strings.URI_WILDCARD + "/"
                 + Strings.APPLICATION_FRAMEWORK_HYDRO + "|" + Strings.APPLICATION_FRAMEWORK_INDIGO + "/"
-                + Strings.OS_ICE_CREAM_SANDWICH + "|" + Strings.OS_JELLYBEAN;
+                + Strings.OS_ICE_CREAM_SANDWICH + "|" + Strings.OS_JELLYBEAN + "|" + Strings.OS_CHROME;
     	RoconInteractions interactions = new RoconInteractions(roconURI);
     	
         NodeMainExecutor nodeMainExecutor = DefaultNodeMainExecutor.newDefault();
