@@ -33,9 +33,15 @@ public class MasterInfo extends AbstractNodeMain {
 	}
     @Override
     public void onStart(final ConnectedNode connectedNode) {
-        RosTopicInfo topicInformation = new RosTopicInfo(connectedNode);
-    	String topicName = topicInformation.findTopic("rocon_std_msgs/MasterInfo");
-    	this.masterInfoListener.connect(connectedNode, topicName, rocon_std_msgs.MasterInfo._TYPE);
+        try{
+            RosTopicInfo topicInformation = new RosTopicInfo(connectedNode);
+            String topicName = topicInformation.findTopic("rocon_std_msgs/MasterInfo");
+            this.masterInfoListener.connect(connectedNode, topicName, rocon_std_msgs.MasterInfo._TYPE);    
+        } catch (RosRuntimeException e){
+             return;   
+        }
+
+        
     }
 
     /**
