@@ -64,7 +64,7 @@ public class ListenerNode<MsgType> {
                 throw new ListenerException(e);
             }
             // timeout.
-            if ( count == 20 ) {
+            if ( count == 50 ) {
                 this.errorMessage = "timed out waiting for a " + subscriber.getTopicName() + "publication";
                 throw new TimeoutException(this.errorMessage);
             }
