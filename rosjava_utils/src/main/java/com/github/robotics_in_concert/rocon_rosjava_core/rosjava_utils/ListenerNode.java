@@ -4,14 +4,13 @@ package com.github.robotics_in_concert.rocon_rosjava_core.rosjava_utils;
 ** Imports
 *****************************************************************************/
 
-import java.util.concurrent.TimeoutException;
-
-import org.ros.exception.RosRuntimeException;
 import org.ros.message.MessageListener;
 import org.ros.namespace.NameResolver;
 import org.ros.namespace.NodeNameResolver;
 import org.ros.node.ConnectedNode;
 import org.ros.node.topic.Subscriber;
+
+import java.util.concurrent.TimeoutException;
 
 /*****************************************************************************
 ** Classes

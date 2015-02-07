@@ -4,13 +4,13 @@ package com.github.robotics_in_concert.rocon_rosjava_core.rosjava_utils;
 ** Imports
 *****************************************************************************/
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.ros.exception.RosRuntimeException;
 import org.ros.master.client.MasterStateClient;
 import org.ros.master.client.TopicType;
 import org.ros.node.Node;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /*****************************************************************************
 ** Classes
