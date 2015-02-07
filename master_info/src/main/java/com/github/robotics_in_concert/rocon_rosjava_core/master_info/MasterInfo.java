@@ -4,21 +4,20 @@ package com.github.robotics_in_concert.rocon_rosjava_core.master_info;
 ** Imports
 *****************************************************************************/
 
-import java.util.concurrent.TimeoutException;
+import com.github.robotics_in_concert.rocon_rosjava_core.rosjava_utils.ListenerException;
+import com.github.robotics_in_concert.rocon_rosjava_core.rosjava_utils.ListenerNode;
+import com.github.robotics_in_concert.rocon_rosjava_core.rosjava_utils.RosTopicInfo;
+import com.google.common.collect.Lists;
 
+import org.ros.internal.loader.CommandLineLoader;
 import org.ros.namespace.GraphName;
 import org.ros.node.AbstractNodeMain;
 import org.ros.node.ConnectedNode;
 import org.ros.node.DefaultNodeMainExecutor;
 import org.ros.node.NodeConfiguration;
 import org.ros.node.NodeMainExecutor;
-import org.ros.exception.RosRuntimeException;
-import org.ros.internal.loader.CommandLineLoader;
 
-import com.github.robotics_in_concert.rocon_rosjava_core.rosjava_utils.ListenerException;
-import com.github.robotics_in_concert.rocon_rosjava_core.rosjava_utils.ListenerNode;
-import com.github.robotics_in_concert.rocon_rosjava_core.rosjava_utils.RosTopicInfo;
-import com.google.common.collect.Lists;
+import java.util.concurrent.TimeoutException;
 
 /*****************************************************************************
 ** MasterInfo

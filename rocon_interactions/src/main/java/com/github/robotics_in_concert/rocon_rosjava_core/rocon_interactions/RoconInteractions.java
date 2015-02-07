@@ -5,19 +5,9 @@ package com.github.robotics_in_concert.rocon_rosjava_core.rocon_interactions;
 *****************************************************************************/
 
 import com.github.robotics_in_concert.rocon_rosjava_core.rosjava_utils.BlockingServiceClientNode;
-import com.github.robotics_in_concert.rocon_rosjava_core.rosjava_utils.BlockingServiceClientException;
-import com.github.robotics_in_concert.rocon_rosjava_core.rosjava_utils.ListenerException;
 import com.github.robotics_in_concert.rocon_rosjava_core.rosjava_utils.ListenerNode;
 import com.github.robotics_in_concert.rocon_rosjava_core.rosjava_utils.RosTopicInfo;
 import com.google.common.collect.Lists;
-
-import java.util.concurrent.TimeoutException;
-import java.util.List;
-
-// import org.apache.commons.logging.Log;
-// final log = connectedNode.getLog();
-// log.error("Dude does this work on android?")
-
 
 import org.ros.exception.RosRuntimeException;
 import org.ros.exception.ServiceNotFoundException;
@@ -30,10 +20,16 @@ import org.ros.node.DefaultNodeMainExecutor;
 import org.ros.node.NodeConfiguration;
 import org.ros.node.NodeMainExecutor;
 
-import rocon_std_msgs.Strings;
+import java.util.List;
+
 import rocon_interaction_msgs.GetRoles;
 import rocon_interaction_msgs.GetRolesRequest;
 import rocon_interaction_msgs.GetRolesResponse;
+import rocon_std_msgs.Strings;
+
+// import org.apache.commons.logging.Log;
+// final log = connectedNode.getLog();
+// log.error("Dude does this work on android?")
 
 /*****************************************************************************
 ** RoconInteractions
