@@ -14,6 +14,7 @@
  * the License.
  */
 
+//noinspection GroovyAssignabilityCheck
 dependencies {
   compile 'org.ros.rosjava_core:rosjava:[0.1,)'
   compile 'org.ros.rosjava_messages:rocon_std_msgs:[0.7,)'
