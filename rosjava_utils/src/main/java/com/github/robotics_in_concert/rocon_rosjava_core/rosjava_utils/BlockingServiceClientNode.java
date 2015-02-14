@@ -4,9 +4,7 @@ package com.github.robotics_in_concert.rocon_rosjava_core.rosjava_utils;
 ** Imports
 *****************************************************************************/
 
-import java.util.concurrent.TimeoutException;
 import org.ros.exception.RemoteException;
-//import org.ros.exception.RosRuntimeException;
 import org.ros.exception.ServiceNotFoundException;
 import org.ros.namespace.NameResolver;
 import org.ros.namespace.NodeNameResolver;
