@@ -9,11 +9,13 @@ import com.github.robotics_in_concert.rocon_rosjava_core.rosjava_utils.ListenerN
 import com.github.robotics_in_concert.rocon_rosjava_core.rosjava_utils.RosTopicInfo;
 import com.google.common.collect.Lists;
 
+import org.ros.exception.RosRuntimeException;
 import org.ros.internal.loader.CommandLineLoader;
 import org.ros.namespace.GraphName;
 import org.ros.node.AbstractNodeMain;
 import org.ros.node.ConnectedNode;
 import org.ros.node.DefaultNodeMainExecutor;
+import org.ros.node.Node;
 import org.ros.node.NodeConfiguration;
 import org.ros.node.NodeMainExecutor;
 
@@ -25,24 +27,25 @@ import java.util.concurrent.TimeoutException;
 
 public class MasterInfo extends AbstractNodeMain {
 
-	private ListenerNode<rocon_std_msgs.MasterInfo> masterInfoListener;
+    private ListenerNode<rocon_std_msgs.MasterInfo> masterInfoListener;
+    public MasterInfo() {
+        this.masterInfoListener = new ListenerNode<rocon_std_msgs.MasterInfo>();
+    }
 
-	public MasterInfo() {
-		this.masterInfoListener = new ListenerNode<rocon_std_msgs.MasterInfo>();
-	}
     @Override
-    public void onStart(final ConnectedNode connectedNode) {
+    public void onStart (final ConnectedNode connectedNode) {
         try{
             RosTopicInfo topicInformation = new RosTopicInfo(connectedNode);
             String topicName = topicInformation.findTopic("rocon_std_msgs/MasterInfo");
             this.masterInfoListener.connect(connectedNode, topicName, rocon_std_msgs.MasterInfo._TYPE);    
         } catch (RosRuntimeException e){
-             return;   
+            try {
+                throw new MasterInfoException(e.getMessage());
+            } catch (MasterInfoException e1) {
+                e1.printStackTrace();
+            }
         }
-
-        
     }
-
     /**
      * Wait for data to come in. This uses a default timeout
      * set by ListenerNode.
