@@ -16,7 +16,7 @@
 
 //noinspection GroovyAssignabilityCheck
 dependencies {
-  compile 'org.ros.rosjava_core:rosjava:[0.1,)'
+  compile 'org.ros.rosjava_core:rosjava:[0.2,0.3)'
 }
 
 defaultTasks 'publishMavenJavaPublicationToMavenRepository'

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>rocon_rosjava_core</name>
-  <version>0.1.0</version>
+  <version>0.2.0</version>
   <description>
     Rocon related libraries in rosjava.
   </description>
@@ -20,5 +20,8 @@
   <build_depend>rosjava_bootstrap</build_depend>
   <build_depend>rosjava_build_tools</build_depend>
   <build_depend>rosjava_core</build_depend>
-  <build_depend>rocon_rosjava_msgs</build_depend>
+  <build_depend>rocon_std_msgs</build_depend>
+  <build_depend>rocon_interaction_msgs</build_depend>
+  <!-- Remove once genjava is official -->
+  <build_depend>rosjava_messages</build_depend>
 </package>
