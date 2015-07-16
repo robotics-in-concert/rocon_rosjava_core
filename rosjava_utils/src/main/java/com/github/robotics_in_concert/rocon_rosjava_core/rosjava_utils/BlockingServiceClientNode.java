@@ -35,11 +35,10 @@ public class BlockingServiceClientNode<RequestType, ResponseType> {
         	srvClient = connectedNode.newServiceClient(resolvedServiceName, serviceType);
         } catch (ServiceNotFoundException e) {
         	throw e;
-        }
-		catch (RosRuntimeException e) {
-			throw e;
-		}
-		srvClient.call(request, this.setupListener());
+        } catch (RosRuntimeException e) {
+          throw e;
+	   }
+	   srvClient.call(request, this.setupListener());
 	}
 
 	public void waitForResponse() {
