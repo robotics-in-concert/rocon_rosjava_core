@@ -5,5 +5,5 @@ with various rocon components and some commonly used rosjava patterns (e.g. more
 
 ## Deprecating
 
-Deprecated for Kinetic due to lack of resources. Feel free to pick up some of the code if it's useful.
+Deprecated for **ROS Kinetic** due to lack of resources. Feel free to pick up some of the code if it's useful.
 
