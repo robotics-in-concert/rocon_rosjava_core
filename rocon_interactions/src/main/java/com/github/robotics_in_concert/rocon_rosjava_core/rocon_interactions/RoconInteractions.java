@@ -78,8 +78,21 @@ public class RoconInteractions extends AbstractNodeMain {
     		}
     	} catch (ServiceNotFoundException e) {
     		// should be having some sort of error flag that can be picked up in waitForResponse
-        	return;
+			try {
+				throw new ServiceNotFoundException(e.getMessage());
+			} catch (ServiceNotFoundException e1) {
+				e1.printStackTrace();
+			}
     	}
+		catch (RosRuntimeException e) {
+			// should be having some sort of error flag that can be picked up in waitForResponse
+			try {
+				throw new RosRuntimeException (e.getMessage());
+			} catch (RosRuntimeException e1) {
+				e1.printStackTrace();
+			}
+			return;
+		}
     }
 
     /**

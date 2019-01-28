@@ -9,6 +9,7 @@ import com.github.robotics_in_concert.rocon_rosjava_core.rosjava_utils.ListenerN
 import com.github.robotics_in_concert.rocon_rosjava_core.rosjava_utils.RosTopicInfo;
 import com.google.common.collect.Lists;
 
+import org.ros.exception.RosRuntimeException;
 import org.ros.internal.loader.CommandLineLoader;
 import org.ros.namespace.GraphName;
 import org.ros.node.AbstractNodeMain;
@@ -31,13 +32,21 @@ public class MasterInfo extends AbstractNodeMain {
 		this.masterInfoListener = new ListenerNode<rocon_std_msgs.MasterInfo>();
 	}
     @Override
-    public void onStart(final ConnectedNode connectedNode) {
-        RosTopicInfo topicInformation = new RosTopicInfo(connectedNode);
-    	String topicName = topicInformation.findTopic("rocon_std_msgs/MasterInfo");
-    	this.masterInfoListener.connect(connectedNode, topicName, rocon_std_msgs.MasterInfo._TYPE);
-    }
+	public void onStart (final ConnectedNode connectedNode) {
+		try{
+			RosTopicInfo topicInformation = new RosTopicInfo(connectedNode);
+			String topicName = topicInformation.findTopic("rocon_std_msgs/MasterInfo");
+			this.masterInfoListener.connect(connectedNode, topicName, rocon_std_msgs.MasterInfo._TYPE);
+		} catch (RosRuntimeException e){
+			try {
+				throw new MasterInfoException(e.getMessage());
+			} catch (MasterInfoException e1) {
+				e1.printStackTrace();
+			}
+		}
+	}
 
-    /**
+	/**
      * Wait for data to come in. This uses a default timeout
      * set by ListenerNode.
      * 

@@ -5,6 +5,7 @@ package com.github.robotics_in_concert.rocon_rosjava_core.rosjava_utils;
 *****************************************************************************/
 
 import org.ros.exception.RemoteException;
+import org.ros.exception.RosRuntimeException;
 import org.ros.exception.ServiceNotFoundException;
 import org.ros.namespace.NameResolver;
 import org.ros.namespace.NodeNameResolver;
@@ -34,8 +35,10 @@ public class BlockingServiceClientNode<RequestType, ResponseType> {
         	srvClient = connectedNode.newServiceClient(resolvedServiceName, serviceType);
         } catch (ServiceNotFoundException e) {
         	throw e;
-        }
-		srvClient.call(request, this.setupListener());
+        } catch (RosRuntimeException e) {
+          throw e;
+	   }
+	   srvClient.call(request, this.setupListener());
 	}
 
 	public void waitForResponse() {
